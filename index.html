@@ -214,11 +214,32 @@ section{ padding:110px 0; position:relative; }
   padding-top:72px;
 }
 .video-hero-word h1{
-  font-size:clamp(2.6rem, 9.5vw, 8.4rem);
+  font-size:clamp(2.4rem, 9vw, 8rem);
   text-align:center; color:var(--white); letter-spacing:-0.01em;
   text-shadow:0 6px 60px rgba(0,0,0,0.6);
 }
 .video-hero .scroll-cue{ z-index:3; }
+
+/* ---------- statement section: wordmark lands here in black, then the big broad "what we do" line ---------- */
+.statement-section{
+  position:relative; background:var(--white); color:var(--black);
+  padding:120px 0 130px; text-align:center;
+}
+.statement-section .word-black{
+  font-size:clamp(2.4rem, 9vw, 8rem);
+  letter-spacing:-0.01em; line-height:1;
+  color:var(--black); margin-bottom:110px;
+}
+.statement-section .statement{
+  font-family:var(--display); font-weight:900; text-transform:uppercase;
+  letter-spacing:-0.015em; line-height:1.05;
+  font-size:clamp(1.9rem, 4.6vw, 3.4rem);
+  max-width:20ch; margin:0 auto;
+}
+@media (max-width:720px){
+  .statement-section{ padding:90px 0 100px; }
+  .statement-section .word-black{ margin-bottom:70px; }
+}
 
 /* ---------- tagline section (home page, scroll-revealed) ---------- */
 .tagline-section{ position:relative; overflow:hidden; padding:150px 0 130px; }
@@ -527,6 +548,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
       <h1>SILKCRAYON<span class="accent">.</span></h1>
     </div>
     <div class="scroll-cue"><span class="bar"></span> Scroll</div>
+  </section>
+
+  <!-- STATEMENT -->
+  <section class="statement-section">
+    <div class="wrap">
+      <h2 class="word-black">SILKCRAYON.</h2>
+      <p class="statement">A production agency &amp; label that develops artists responsibly.</p>
+    </div>
   </section>
 
   <!-- TAGLINE -->
