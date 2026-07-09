@@ -15,6 +15,14 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
+@font-face{
+  font-family:'Victory Striker Sans Demo';
+  src:url('assets/fonts/victory-striker-sans-demo.otf') format('opentype');
+  font-weight:100 900;
+  font-style:normal;
+  font-display:swap;
+}
+
 :root{
   --black:  #0A0A0A;
   --white:  #F5F4EF;
@@ -24,7 +32,7 @@
   --line-d: rgba(245,244,239,0.16);
   --line-l: rgba(10,10,10,0.14);
 
-  --display:'Archivo', sans-serif;
+  --display:'Victory Striker Sans Demo', 'Archivo', sans-serif;
   --body:'Archivo', sans-serif;
   --mono:'IBM Plex Mono', monospace;
 }
@@ -53,7 +61,7 @@ h1,h2,h3{
   font-weight:900;
   text-transform:uppercase;
   letter-spacing:-0.015em;
-  line-height:0.94;
+  line-height:1.08;
 }
 h1{ font-size:clamp(3rem, 8.4vw, 7.6rem); }
 h2{ font-size:clamp(2.1rem, 4.6vw, 3.6rem); }
@@ -196,6 +204,22 @@ section{ padding:110px 0; position:relative; }
 .hero-small{ min-height:64vh; }
 
 /* ---------- video hero (home page) ---------- */
+.logo-scroll-wrap{ position:relative; }
+.sticky-logo{
+  position:sticky; top:0; height:0; z-index:20; pointer-events:none;
+}
+.sticky-logo .word-inner{
+  position:absolute; top:26vh; left:0; right:0; text-align:center; padding:0 24px;
+}
+.sticky-logo h1{
+  display:inline-block;
+  font-size:clamp(2.4rem, 9vw, 8rem);
+  letter-spacing:-0.01em; line-height:1;
+  color:var(--white);
+  transition:color 0.35s ease, opacity 0.4s ease;
+}
+.sticky-logo.on-light h1{ color:var(--black); }
+.sticky-logo.fade-out h1{ opacity:0; }
 .video-hero{
   position:relative; height:100vh; min-height:560px; max-height:1100px;
   overflow:hidden; background:var(--black);
@@ -208,37 +232,26 @@ section{ padding:110px 0; position:relative; }
   position:absolute; inset:0; z-index:1;
   background:linear-gradient(180deg, rgba(10,10,10,0.34) 0%, rgba(10,10,10,0.1) 38%, rgba(10,10,10,0.52) 78%, rgba(10,10,10,0.94) 100%);
 }
-.video-hero-word{
-  position:absolute; inset:0; z-index:2;
-  display:flex; align-items:center; justify-content:center;
-  padding-top:72px;
-}
-.video-hero-word h1{
-  font-size:clamp(2.4rem, 9vw, 8rem);
-  text-align:center; color:var(--white); letter-spacing:-0.01em;
-  text-shadow:0 6px 60px rgba(0,0,0,0.6);
-}
 .video-hero .scroll-cue{ z-index:3; }
 
-/* ---------- statement section: wordmark lands here in black, then the big broad "what we do" line ---------- */
+/* handoff runway: empty white space where the pinned word lands, turns black, then fades — clears before real copy arrives */
+.logo-handoff{ position:relative; height:72vh; background:var(--white); }
+.scroll-sentinel{ position:absolute; bottom:0; height:1px; width:1px; }
+
+/* ---------- statement section: big broad "what we do" line, fully static, sits below the handoff ---------- */
 .statement-section{
   position:relative; background:var(--white); color:var(--black);
-  padding:120px 0 130px; text-align:center;
-}
-.statement-section .word-black{
-  font-size:clamp(2.4rem, 9vw, 8rem);
-  letter-spacing:-0.01em; line-height:1;
-  color:var(--black); margin-bottom:110px;
+  padding:0 0 130px; text-align:center;
 }
 .statement-section .statement{
   font-family:var(--display); font-weight:900; text-transform:uppercase;
-  letter-spacing:-0.015em; line-height:1.05;
+  letter-spacing:-0.015em; line-height:1.18;
   font-size:clamp(1.9rem, 4.6vw, 3.4rem);
   max-width:20ch; margin:0 auto;
 }
 @media (max-width:720px){
-  .statement-section{ padding:90px 0 100px; }
-  .statement-section .word-black{ margin-bottom:70px; }
+  .sticky-logo .word-inner{ top:20vh; }
+  .logo-handoff{ height:48vh; }
 }
 
 /* ---------- tagline section (home page, scroll-revealed) ---------- */
@@ -261,7 +274,7 @@ section{ padding:110px 0; position:relative; }
 .big-tagline{
   margin-bottom:30px; max-width:19ch;
   font-family:var(--display); font-weight:900; text-transform:uppercase;
-  letter-spacing:-0.015em; line-height:0.96;
+  letter-spacing:-0.015em; line-height:1.16;
   font-size:clamp(2.6rem,7.2vw,6.4rem);
 }
 .tagline-section p.lede{ color:rgba(245,244,239,0.78); margin-bottom:40px; }
@@ -537,23 +550,29 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 <main>
 
-  <!-- VIDEO HERO -->
-  <section class="video-hero">
-    <video class="video-hero-media" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-      <source src="assets/hero-space.webm" type="video/webm">
-      <source src="assets/hero-space.mp4" type="video/mp4">
-    </video>
-    <div class="video-overlay"></div>
-    <div class="video-hero-word">
-      <h1>SILKCRAYON<span class="accent">.</span></h1>
+  <!-- VIDEO HERO + PINNED WORDMARK -->
+  <div class="logo-scroll-wrap">
+    <div class="sticky-logo" aria-hidden="true">
+      <div class="word-inner"><h1>SILKCRAYON<span class="accent">.</span></h1></div>
     </div>
-    <div class="scroll-cue"><span class="bar"></span> Scroll</div>
-  </section>
+
+    <section class="video-hero">
+      <video class="video-hero-media" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="assets/hero-space.webm" type="video/webm">
+        <source src="assets/hero-space.mp4" type="video/mp4">
+      </video>
+      <div class="video-overlay"></div>
+      <div class="scroll-cue"><span class="bar"></span> Scroll</div>
+    </section>
+
+    <div class="logo-handoff">
+      <div class="scroll-sentinel"></div>
+    </div>
+  </div>
 
   <!-- STATEMENT -->
   <section class="statement-section">
     <div class="wrap">
-      <h2 class="word-black">SILKCRAYON.</h2>
       <p class="statement">A production agency &amp; label that develops artists responsibly.</p>
     </div>
   </section>
@@ -922,6 +941,28 @@ document.addEventListener('DOMContentLoaded', () => {
   if (heroVideo && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     heroVideo.pause();
     heroVideo.removeAttribute('autoplay');
+  }
+
+  // pinned wordmark: swap white→black once over the light handoff zone, fade out before real copy arrives
+  const stickyLogo = document.querySelector('.sticky-logo');
+  const logoHandoff = document.querySelector('.logo-handoff');
+  const sentinel = document.querySelector('.scroll-sentinel');
+  if (stickyLogo && logoHandoff && sentinel) {
+    let ticking = false;
+    const updateLogoState = () => {
+      const anchorY = window.innerHeight * 0.26;
+      stickyLogo.classList.toggle('on-light', logoHandoff.getBoundingClientRect().top < anchorY);
+      stickyLogo.classList.toggle('fade-out', sentinel.getBoundingClientRect().top < anchorY + 220);
+      ticking = false;
+    };
+    updateLogoState();
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateLogoState);
+        ticking = true;
+      }
+    }, { passive: true });
+    window.addEventListener('resize', updateLogoState);
   }
 
   // contact / apply forms — no backend wired up yet, so confirm locally
