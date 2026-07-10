@@ -386,9 +386,10 @@ section{ padding:110px 0; position:relative; }
   position:relative;
   padding:0;                       /* overrides section{padding:110px 0} */
   background:var(--black); color:var(--white);
-  min-height:auto;                 /* raised to a scroll runway only when animating */
+  min-height:auto;                 /* raised to a scroll runway only when scrubbing */
 }
-.silk-stage.is-anim{ min-height:280vh; }
+/* DESKTOP scrub: a short runway so a little scroll advances the whole act */
+.silk-stage.is-anim{ min-height:170vh; }
 
 /* --- silk material: texture + drape gradient + sliding sheen --- */
 .silk-bg{ position:absolute; inset:0; overflow:hidden; z-index:0; }
@@ -470,7 +471,7 @@ section{ padding:110px 0; position:relative; }
 .arm-logo{ height:96px; display:flex; align-items:center; justify-content:center; }
 .arm-logo img{ width:auto; object-fit:contain; display:block; }
 .arm-logo .icon{ height:76px; }
-.arm-logo .wordmark{ height:34px; }   /* wide silkcrayon lockup */
+.arm-logo .wordmark{ height:30px; }   /* bold SILKCRAYON wordmark — balances the two star icons */
 .arm-role{
   font-family:var(--mono); font-size:0.68rem; letter-spacing:0.16em; text-transform:uppercase;
   color:var(--accent);
@@ -499,19 +500,56 @@ section{ padding:110px 0; position:relative; }
 }
 .silk-thesis .accent{ color:var(--accent); }
 
-/* When animating, the arms/text/tie start hidden; JS drives them in via scroll.
-   Static/reduced-motion keeps them fully visible (the rules above). */
+/* DESKTOP scrub: arms/text/tie start hidden; JS scrubs them in on scroll.
+   Static / reduced-motion / no-JS keep them fully visible (rules above). */
 .silk-stage.is-anim .arm,
 .silk-stage.is-anim .arms-tie,
 .silk-stage.is-anim .silk-thesis,
 .silk-stage.is-anim .arm .arm-copy{ opacity:0; }
 
+/* ==========================================================================
+   MOBILE play mode — no pinning, no scroll-scrubbing (both felt bad on a
+   phone and clipped the pinned content). The section is normal height; when
+   it scrolls into view it plays the reveal ONCE: the star flourishes, then
+   the three arms + copy rise in, staggered. Nothing is ever clipped.
+   ========================================================================== */
+.silk-stage.is-play{ min-height:auto; }
+.silk-stage.is-play .silk-sticky{ position:relative; height:auto; padding:88px 0; display:block; }
+.silk-stage.is-play .silk-morph{ display:none; }               /* SILK hand-off is a desktop delight */
+.silk-stage.is-play .split-stage{ display:flex; flex-direction:column; align-items:center; }
+.silk-stage.is-play .silk-seed{
+  display:block; position:static; transform:scale(0.85);
+  width:118px; height:118px; margin:4px auto 30px;
+  opacity:0; transition:opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1);
+}
+.silk-stage.is-play .silk-seed .hero-star{ position:absolute; }
+.silk-stage.is-play.played .silk-seed{ opacity:1; transform:scale(1); }
+
+.silk-stage.is-play .arm{
+  opacity:0; transform:translateY(26px) scale(0.97);
+  transition:opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1);
+}
+.silk-stage.is-play .arm .arm-copy{
+  opacity:0; transform:translateY(10px);
+  transition:opacity .55s ease .12s, transform .55s cubic-bezier(.16,1,.3,1) .12s;
+}
+.silk-stage.is-play .silk-thesis{
+  opacity:0; transform:translateY(14px);
+  transition:opacity .6s ease, transform .6s cubic-bezier(.16,1,.3,1);
+}
+.silk-stage.is-play.played .arm,
+.silk-stage.is-play.played .arm .arm-copy,
+.silk-stage.is-play.played .silk-thesis{ opacity:1; transform:none; }
+.silk-stage.is-play.played .arm:nth-of-type(1){ transition-delay:.15s; }
+.silk-stage.is-play.played .arm:nth-of-type(2){ transition-delay:.30s; }
+.silk-stage.is-play.played .arm:nth-of-type(3){ transition-delay:.45s; }
+.silk-stage.is-play.played .silk-thesis{ transition-delay:.75s; }
+
 @media (max-width:900px){
-  .silk-stage.is-anim{ min-height:230vh; }
-  .arms{ grid-template-columns:1fr; gap:40px; max-width:340px; margin:0 auto; }
+  .arms{ grid-template-columns:1fr; gap:38px; max-width:330px; margin:0 auto; }
   .arms-tie{ display:none; }
-  .silk-morph{ width:82vw; }
-  .arm-desc{ max-width:34ch; }
+  .arm-desc{ max-width:32ch; }
+  .silk-heads-sub{ margin-bottom:30px; }
 }
 @media (prefers-reduced-motion:reduce){
   .silk-sheen{ animation:none; opacity:0.5; }
@@ -738,7 +776,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
               </div>
             </div>
             <div class="arm arm--studio" data-arm>
-              <div class="arm-logo"><img class="wordmark" src="assets/logo-silkcrayon.png" alt="Silkcrayon Studios"></div>
+              <div class="arm-logo"><img class="wordmark" src="assets/logo-silkcrayon-white.png" alt="Silkcrayon Studios"></div>
               <div class="arm-copy">
                 <span class="arm-role">The room · Studio</span>
                 <p class="arm-desc">Gives them the room, the engineers and the standard to do their best work — recording, mixing, mastering and music video, open to anyone.</p>
@@ -1110,12 +1148,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Silk stage — "the mark divides".
-  // The SILK mark carries down from the hero, collapses into its star, and the
-  // star blooms into the three arm logos + copy. Driven by scroll progress
-  // through a tall sticky section, so it's resize/mobile safe. Reduced-motion
-  // and no-JS users get the fully-settled layout (handled entirely in CSS).
+  // Two behaviours, chosen by screen size:
+  //  · DESKTOP  → scroll-scrub: SILK carries down, collapses into its star, and
+  //    the star blooms into the three arms. Short runway so it advances quickly.
+  //  · MOBILE   → autoplay on enter: no pinning, no scrubbing (both felt heavy
+  //    on a phone and clipped the pinned content). Plays the reveal once.
+  // Reduced-motion / no-JS users get the fully-settled layout (CSS handles it).
   const stage = document.querySelector('[data-silk-stage]');
-  if (stage && !reduceMotion) {
+  const isMobile = window.matchMedia('(max-width: 720px)').matches;
+
+  if (stage && !reduceMotion && isMobile) {
+    // --- mobile: play once when it scrolls into view ---
+    stage.classList.add('is-play');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { stage.classList.add('played'); io.unobserve(stage); }
+        });
+      }, { threshold: 0.28 });
+      io.observe(stage);
+    } else {
+      stage.classList.add('played');
+    }
+  } else if (stage && !reduceMotion) {
+    // --- desktop: scroll-scrub timeline ---
     const morph  = stage.querySelector('#silkMorph');
     const seed   = stage.querySelector('#silkSeed');
     const armEls = Array.from(stage.querySelectorAll('[data-arm]'));
@@ -1123,7 +1179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tie    = stage.querySelector('#armsTie');
     const thesis = stage.querySelector('.silk-thesis');
 
-    stage.classList.add('is-anim');   // switch section into pinned/animated mode
+    stage.classList.add('is-anim');
 
     const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
     const ease  = t => 1 - Math.pow(1 - t, 3);   // easeOutCubic
@@ -1134,39 +1190,39 @@ document.addEventListener('DOMContentLoaded', () => {
       const p = total > 0 ? clamp(scrolled / total, 0, 1) : 0;
       const map = (a,b) => clamp((p - a) / (b - a), 0, 1);
 
-      // 1 — SILK mark holds, then shrinks + rises + fades as it collapses inward
-      const mE = ease(map(0.05, 0.40));
-      morph.style.transform = `translate(-50%,-50%) translateY(${-8 * mE}vh) scale(${1 - 0.86 * mE})`;
-      morph.style.opacity   = String(1 - map(0.24, 0.40));
+      // 1 — SILK holds briefly, then shrinks + rises + fades, collapsing inward
+      const mE = ease(map(0.02, 0.30));
+      morph.style.transform = `translate(-50%,-50%) translateY(${-6 * mE}vh) scale(${1 - 0.86 * mE})`;
+      morph.style.opacity   = String(1 - map(0.16, 0.30));
 
       // 2 — the single star seed blooms in, then fades as the arms lock
-      const sIn  = ease(map(0.18, 0.44));
-      const sOut = map(0.54, 0.68);
+      const sIn  = ease(map(0.12, 0.34));
+      const sOut = map(0.42, 0.56);
       seed.style.transform = `translate(-50%,-50%) scale(${0.6 + 0.4 * sIn})`;
       seed.style.opacity   = String(Math.max(0, sIn - sOut));
 
       // 3 — three arms fan out from the seed, staggered
-      const starts = [0.40, 0.46, 0.52];
-      const dir = [1, 0, -1];        // left arm enters from centre-right, right from centre-left
+      const starts = [0.28, 0.33, 0.38];
+      const dir = [1, 0, -1];
       armEls.forEach((arm, i) => {
-        const e = ease(map(starts[i], starts[i] + 0.28));
+        const e = ease(map(starts[i], starts[i] + 0.24));
         const off = 1 - e;
-        arm.style.transform = `translate(${dir[i] * 118 * off}%, ${34 * off}%) scale(${0.5 + 0.5 * e})`;
+        arm.style.transform = `translate(${dir[i] * 118 * off}%, ${30 * off}%) scale(${0.5 + 0.5 * e})`;
         arm.style.opacity   = String(e);
       });
 
       // 4 — connective hairline draws between them
-      const te = ease(map(0.52, 0.74));
+      const te = ease(map(0.40, 0.60));
       tie.style.transform = `scaleX(${te})`;
       tie.style.opacity   = String(te * 0.9);
 
       // 5 — each arm's copy rises in, then the thesis
       copies.forEach((c, i) => {
-        const ce = ease(map(0.62 + i * 0.04, 0.86 + i * 0.04));
+        const ce = ease(map(0.48 + i * 0.04, 0.70 + i * 0.04));
         c.style.transform = `translateY(${(1 - ce) * 14}px)`;
         c.style.opacity   = String(ce);
       });
-      const the = ease(map(0.82, 1.0));
+      const the = ease(map(0.72, 0.90));
       thesis.style.transform = `translateY(${(1 - the) * 16}px)`;
       thesis.style.opacity   = String(the);
     };
