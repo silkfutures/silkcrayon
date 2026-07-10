@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Silkcrayon — production agency & label, London</title>
-<meta name="description" content="Silkcrayon is a London production agency and label. Silkfutures develops artists responsibly, Silk Records releases them, and our bespoke studio mixes, produces and shoots video for hire.">
+<title>Silkcrayon — production agency & label, Cardiff Bay</title>
+<meta name="description" content="Silkcrayon is a Cardiff Bay production agency and label. Silkfutures develops artists responsibly, Silk Records releases them, and our bespoke studio mixes, produces and shoots video for hire.">
 <style>
 /* ==========================================================================
    SILKCRAYON — design tokens v4
-   Bold London ad-agency showreel energy. Stark black/white, one hot red,
+   Bold ad-agency showreel energy. Stark black/white, one hot red,
    huge declarative uppercase type, full-bleed hero, work-grid, numbered
    method timeline, pillar cards, ecosystem grid, stacked quotes.
    ========================================================================== */
@@ -236,6 +236,7 @@ section{ padding:110px 0; position:relative; }
   width:132%; height:auto; max-width:640px;
   transform:translate(-50%,-50%) scale(0.75);
   opacity:0;
+  filter:drop-shadow(0 8px 20px rgba(10,10,10,0.08));
   transition:opacity 0.35s ease 0.05s, transform 0.4s cubic-bezier(.34,1.56,.64,1) 0.05s;
 }
 .morph-logo .crayon-badge path{ fill:#F5F4EF; }
@@ -265,11 +266,11 @@ section{ padding:110px 0; position:relative; }
 }
 
 /* handoff runway: room for the pinned black wordmark to sit clear above the statement text */
-.logo-handoff{ position:relative; height:56vh; background:var(--white); }
+.logo-handoff{ position:relative; height:56vh; background:#EAE7DC; }
 
 /* ---------- statement section: paragraph sits below the pinned wordmark, with trailing room so it never has to pass through it ---------- */
 .statement-section{
-  position:relative; background:var(--white); color:var(--black);
+  position:relative; background:#EAE7DC; color:var(--black);
   padding:0 0 46vh; text-align:center;
 }
 .statement-section .statement{
@@ -575,7 +576,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
       <a href="index.html">Home</a>
       <a href="futures.html">Silkfutures</a>
       <a href="records.html">Records</a>
-      <a href="services.html">Services</a>
+      <a href="services.html">Studio</a>
       <a href="contact.html" class="nav-cta">Start a project</a>
     </div>
   </div>
@@ -594,8 +595,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   <!-- VIDEO HERO -->
   <section class="video-hero">
     <video class="video-hero-media" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-      <source src="assets/hero-space.webm" type="video/webm">
-      <source src="assets/hero-space.mp4" type="video/mp4">
+      <source src="assets/hero-spark.webm" type="video/webm">
+      <source src="assets/hero-spark.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
     <div class="scroll-cue"><span class="bar"></span> Scroll</div>
@@ -644,7 +645,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
       </svg>
     </div>
     <div class="wrap">
-      <span class="eyebrow">Production agency &amp; label — London</span>
+      <span class="eyebrow">Production agency &amp; label — Cardiff Bay</span>
       <h2 class="big-tagline">WE MAKE RECORDS. WE MAKE ARTISTS WHO <span class="accent">LAST.</span></h2>
       <p class="lede">Silkcrayon develops artists through Silkfutures, releases them through Silk Records, and takes on bespoke mixing, production and music video work for anyone who refuses to sound average. Same studio, same standards, three ways in.</p>
       <div style="display:flex; gap:18px; flex-wrap:wrap;">
@@ -708,25 +709,25 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
           <span class="index-no">01</span>
           <div>
             <h3>Silkfutures</h3>
-            <p class="desc dim-d" style="margin-top:8px; max-width:52ch;">A twelve-month artist development programme — coaching, studio time, media training and welfare support for unsigned talent.</p>
+            <p class="desc dim-d" style="margin-top:8px; max-width:52ch;">A Cardiff CIC using music, mentoring and movement to support young people aged 11–25. The root of the ecosystem.</p>
           </div>
-          <a href="futures.html" class="go">Enter the programme</a>
+          <a href="futures.html" class="go">About Silkfutures</a>
         </div>
         <div class="expertise-row">
           <span class="index-no">02</span>
           <div>
-            <h3>Silk Records</h3>
-            <p class="desc dim-d" style="margin-top:8px; max-width:52ch;">Our label. We release artists who've come through Silkfutures, and a handful more we simply believe in.</p>
+            <h3>Silkcrayon Studios</h3>
+            <p class="desc dim-d" style="margin-top:8px; max-width:52ch;">Our recording studio in a 1926 Cardiff Bay bank vault. Mixing, production and development, bookable by anyone.</p>
           </div>
-          <a href="records.html" class="go">Meet the roster</a>
+          <a href="services.html" class="go">Book the studio</a>
         </div>
         <div class="expertise-row">
           <span class="index-no">03</span>
           <div>
-            <h3>Bespoke</h3>
-            <p class="desc dim-d" style="margin-top:8px; max-width:52ch;">Mixing, production and music video for hire. Bring us a session, a single, or a treatment.</p>
+            <h3>Silk Records</h3>
+            <p class="desc dim-d" style="margin-top:8px; max-width:52ch;">The label and management arm. We release artists who've come through Silkfutures, and a handful more we simply believe in.</p>
           </div>
-          <a href="services.html" class="go">See services</a>
+          <a href="records.html" class="go">Meet the roster</a>
         </div>
       </div>
     </div>
@@ -812,35 +813,29 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   <section class="section-dark section-line">
     <div class="wrap section-head">
       <span class="eyebrow">The ecosystem</span>
-      <h2>WHO'S IN THE <span class="accent">ROOM RIGHT NOW.</span></h2>
-      <p class="lede dim-d">A snapshot of artists moving through Silkfutures and onto Silk Records — some mid-programme, some already released.</p>
+      <h2>ONE PIPELINE. <span class="accent">THREE STAGES.</span></h2>
+      <p class="lede dim-d">A vertically integrated system built to take Cardiff artists all the way — from first session to finished release.</p>
     </div>
     <div class="wrap">
-      <div class="eco-grid">
-        <div class="eco-card">
-          <div class="avatar"></div>
-          <span class="eco-tag">Silk Records</span>
-          <h3>Rue Solace</h3>
-          <span class="role">Alt-pop / vocalist</span>
-          <p>Came through Silkfutures cohort 02, released her debut EP <em>Paper Cuts</em> in 2025, and is midway through her first headline tour.</p>
+      <div class="path-grid">
+        <div class="path-card">
+          <span class="index-no">01 · Silkfutures CIC</span>
+          <h3>Discover &amp; Mentor</h3>
+          <p>A Cardiff-based Community Interest Company finding and funding emerging artists from high-deprivation communities. The root of the ecosystem.</p>
         </div>
-        <div class="eco-card">
-          <div class="avatar"></div>
-          <span class="eco-tag">Silkfutures · Cohort 04</span>
-          <h3>Kojo Vale</h3>
-          <span class="role">Producer / vocalist</span>
-          <p>Producer-vocalist from Lewisham, six months into the programme and prepping his first single with in-house production.</p>
+        <div class="path-card">
+          <span class="index-no">02 · Silkcrayon Studios</span>
+          <h3>Develop &amp; Craft</h3>
+          <p>The creative home where artists find their sound and produce work that lasts — guided by engineers who understand artist development from the ground up.</p>
         </div>
-        <div class="eco-card">
-          <div class="avatar"></div>
-          <span class="eco-tag">Silkfutures · Cohort 04</span>
-          <h3>Delphine Row</h3>
-          <span class="role">Songwriter / multi-instrumentalist</span>
-          <p>Finished media training this spring and is heading into her third studio block.</p>
+        <div class="path-card">
+          <span class="index-no">03 · Silk Records</span>
+          <h3>Release &amp; Rise</h3>
+          <p>The label and management arm that takes finished artists to market — handling releases, strategy and growth. Cardiff to London and beyond.</p>
         </div>
       </div>
       <div style="margin-top:40px;">
-        <a href="futures.html" class="btn btn-outline">See the full programme</a>
+        <a href="futures.html" class="btn btn-outline">See the full ecosystem</a>
       </div>
     </div>
   </section>
@@ -915,7 +910,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
         <h4>Studio</h4>
         <a href="futures.html">Silkfutures</a>
         <a href="records.html">Silk Records</a>
-        <a href="services.html">Services</a>
+        <a href="services.html">Studio</a>
         <a href="contact.html">Contact</a>
       </div>
       <div>
@@ -926,7 +921,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
       </div>
     </div>
     <div class="footer-bottom">
-      <span>Peckham, London — © <span class="js-year"></span> Silkcrayon</span>
+      <span>Cardiff Bay, Wales — © <span class="js-year"></span> Silkcrayon</span>
       <span>Catalog SKC001–</span>
     </div>
   </div>

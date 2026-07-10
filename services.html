@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Services — bespoke mixing, production & music video | Silkcrayon</title>
-<meta name="description" content="Book Silkcrayon's studio for mixing, mastering, production, music video and artist development consulting — same team behind Silk Records.">
+<title>Silkcrayon Studios — book the studio, Cardiff Bay | Silkcrayon</title>
+<meta name="description" content="Silkcrayon Studios: a professional recording studio in a 1926 bank vault in Cardiff Bay. Recording, mixing, mastering and artist development, operating under our No Harmful Music Policy.">
 <style>
 /* ==========================================================================
    SILKCRAYON — design tokens v4
@@ -387,8 +387,62 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .scroll-cue .bar::after{ animation:none; }
 }
 
+/* ---------- no harmful music policy + booking gate ---------- */
+.policy-block{
+  background:var(--white); color:var(--black);
+  padding:36px; border:1px solid var(--line-l);
+}
+.policy-block h3{ text-transform:none; font-size:1.1rem; margin-bottom:16px; }
+.policy-list{ margin-top:6px; }
+.policy-list li{
+  display:flex; gap:14px; padding:14px 0; border-top:1px solid var(--line-l);
+  font-size:0.94rem; color:var(--grey-dark); line-height:1.55;
+}
+.policy-list li:first-child{ border-top:none; }
+.policy-list li::before{
+  content:""; flex-shrink:0; width:8px; height:8px; margin-top:7px;
+  background:var(--red); border-radius:50%;
+}
+.consent-box{
+  margin-top:28px; padding-top:24px; border-top:1px solid var(--line-l);
+  display:flex; gap:14px; align-items:flex-start;
+}
+.consent-box input[type="checkbox"]{
+  width:20px; height:20px; flex-shrink:0; margin-top:2px;
+  accent-color:var(--red); cursor:pointer;
+}
+.consent-box label{
+  font-family:var(--body); font-size:0.92rem; text-transform:none;
+  letter-spacing:normal; color:var(--black); line-height:1.55; cursor:pointer;
+}
+.booking-widget{
+  position:relative; margin-top:28px;
+}
+.booking-widget .calendly-inline-widget{
+  min-width:280px; height:680px;
+}
+.booking-lock{
+  position:absolute; inset:0; z-index:2;
+  background:rgba(245,244,239,0.9);
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  padding:40px; transition:opacity 0.25s ease;
+}
+.booking-lock p{
+  font-family:var(--mono); font-size:0.8rem; text-transform:uppercase; letter-spacing:0.06em;
+  color:var(--grey-dark); max-width:32ch;
+}
+.booking-widget.unlocked .booking-lock{ opacity:0; pointer-events:none; }
+.booking-fallback{
+  margin-top:28px; padding:30px; border:1px dashed var(--line-l);
+  text-align:center;
+}
+.booking-fallback .btn{ pointer-events:none; opacity:0.4; }
+.booking-fallback.unlocked .btn{ pointer-events:auto; opacity:1; }
+@media (max-width:900px){
+  .policy-block{ padding:26px; }
+}
+
 </style>
-</head>
 <body>
 
 <nav class="site-nav">
@@ -399,7 +453,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
       <a href="index.html">Home</a>
       <a href="futures.html">Silkfutures</a>
       <a href="records.html">Records</a>
-      <a href="services.html">Services</a>
+      <a href="services.html" class="active">Studio</a>
       <a href="contact.html" class="nav-cta">Start a project</a>
     </div>
   </div>
@@ -407,13 +461,81 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 <main>
 
+  <!-- HERO -->
   <section class="hero hero-small">
     <div class="hero-glow"></div>
     <div class="wrap">
-      <span class="eyebrow">Bespoke — for hire</span>
-      <h1>BRING US A SESSION, A SINGLE, <span class="accent">OR A TREATMENT.</span></h1>
-      <p class="lede">You don't need to be signed to us to work with us. Same studio, same team, same standard we hold our own label to — booked on a project basis, no long-term deal required.</p>
-      <a href="contact.html" class="btn">Check availability</a>
+      <span class="eyebrow">Silkcrayon Studios — Cardiff Bay · Est. 2020</span>
+      <h1>WHERE ARTISTS <span class="accent">GO TO GROW.</span></h1>
+      <p class="lede">Authentic voices shape culture. We help shape those voices. A professional recording studio hidden in a historical 1926 bank vault — guided by engineers who understand artist development from the ground up.</p>
+      <div style="display:flex; gap:18px; flex-wrap:wrap;">
+        <a href="#booking" class="btn">Book the studio</a>
+        <a href="#space" class="btn btn-outline">Explore the space</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE SPACE -->
+  <section id="space" class="section-line">
+    <div class="wrap section-head">
+      <span class="eyebrow">The space</span>
+      <h2>HIDDEN IN A <span class="accent">1926 BANK VAULT.</span></h2>
+      <p class="lede">Silkcrayon has been developed over five years with one question in mind: what does an artist actually need to do their best work? The answer isn't just equipment. It's environment, energy, and someone in the room who genuinely understands where you're trying to go. We're for the artist.</p>
+    </div>
+  </section>
+
+  <div class="stat-row" style="background:var(--black); color:var(--white);">
+    <div class="stat"><div class="num">500+</div><div class="label">Artists since 2020</div></div>
+    <div class="stat"><div class="num">6+</div><div class="label">Years developing talent</div></div>
+    <div class="stat"><div class="num">£60</div><div class="label">Per hour when you book 2+ hrs</div></div>
+  </div>
+
+  <!-- THE STANDARD / NO HARMFUL MUSIC POLICY -->
+  <section class="section-dark">
+    <div class="wrap section-head">
+      <span class="eyebrow">The standard</span>
+      <h2>MUSIC THAT MOVES <span class="accent">PEOPLE FORWARD.</span></h2>
+      <p class="lede dim-d">Silkcrayon operates a No Harmful Music Policy — not as a restriction, but as a standard. One we believe Cardiff's music scene deserves, and one that runs through everything we do, from Silkfutures mentoring to Silk Records releases. If your music is honest, if it has something to say, if you mean it — you'll fit here.</p>
+    </div>
+    <div class="wrap">
+      <ul class="policy-list" style="max-width:70ch;">
+        <li>We do not record music that glorifies violence, exploitation, or the degradation of others — regardless of commercial precedent.</li>
+        <li>We believe authenticity is the most powerful artistic force. Music made from a real place always lands deeper.</li>
+        <li>We ask every artist to agree to this policy before their first session. This isn't gatekeeping — it's how we make sure we can genuinely help you.</li>
+        <li>We hold the same standard for every artist, from Silkfutures mentees to Silk Records acts.</li>
+        <li>Cardiff has produced exceptional artists. We want to be part of a scene the city is genuinely proud of.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PIPELINE -->
+  <section class="section-line">
+    <div class="wrap section-head">
+      <span class="eyebrow">One pipeline, three stages</span>
+      <h2>FROM COMMUNITY <span class="accent">TO CATALOGUE.</span></h2>
+      <p class="lede">A vertically integrated system built to take Cardiff artists all the way.</p>
+    </div>
+    <div class="wrap">
+      <div class="path-grid">
+        <div class="path-card">
+          <span class="index-no">01 · Silkfutures CIC</span>
+          <h3>Discover &amp; Mentor</h3>
+          <p>A Cardiff-based Community Interest Company finding and funding emerging artists from high-deprivation communities. The root of the ecosystem.</p>
+          <a href="futures.html" class="btn btn-outline">About Silkfutures</a>
+        </div>
+        <div class="path-card">
+          <span class="index-no">02 · Silkcrayon Studios</span>
+          <h3>Develop &amp; Craft</h3>
+          <p>The creative home where artists find their sound, shape their identity, and produce work that lasts — guided by engineers who understand artist development from the ground up.</p>
+          <a href="#booking" class="btn btn-outline">Book the studio</a>
+        </div>
+        <div class="path-card">
+          <span class="index-no">03 · Silk Records</span>
+          <h3>Release &amp; Rise</h3>
+          <p>The label and management arm that takes finished artists to market — handling releases, strategy and growth. Cardiff to London and beyond.</p>
+          <a href="records.html" class="btn btn-outline">Meet the label</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -423,34 +545,29 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
       <div class="service-row">
         <div>
           <span class="eyebrow">01</span>
-          <h2 style="margin-top:16px;">Mixing &amp; Mastering</h2>
-          <p class="price-tag" style="display:block; margin-top:14px;">FROM £350 / TRACK</p>
+          <h2 style="margin-top:16px;">Recording Session</h2>
+          <p class="price-tag" style="display:block; margin-top:14px;">FROM £80 / HOUR</p>
         </div>
         <div>
-          <p class="lede" style="font-size:1.05rem;">Send us your stems, tell us the reference points, and we'll get it sitting right — loud enough for the playlist, dynamic enough for the room.</p>
+          <p class="lede" style="font-size:1.05rem;">Vocals, instruments, full productions — engineered by Nathan Misra in the Cardiff Bay vault. Every session is guided, not just recorded.</p>
           <ul>
-            <li>Two rounds of revisions included</li>
-            <li>Stereo &amp; streaming-loudness masters, plus an instrumental</li>
-            <li>Typical turnaround: 5–7 working days</li>
+            <li>1 hr — £80 · 2 hr — £120 · 3 hr — £180</li>
+            <li>4 hr — £240 · 5 hr — £300</li>
+            <li>£60/hr when you book 2 or more hours</li>
           </ul>
-          <a href="contact.html" class="btn btn-outline" style="margin-top:24px;">Book a mix</a>
+          <a href="#booking" class="btn btn-outline" style="margin-top:24px;">Book a session</a>
         </div>
       </div>
 
       <div class="service-row">
         <div>
           <span class="eyebrow">02</span>
-          <h2 style="margin-top:16px;">Production</h2>
-          <p class="price-tag" style="display:block; margin-top:14px;">FROM £600 / TRACK</p>
+          <h2 style="margin-top:16px;">Mixing &amp; Mastering</h2>
+          <p class="price-tag" style="display:block; margin-top:14px;">POA PER TRACK</p>
         </div>
         <div>
-          <p class="lede" style="font-size:1.05rem;">From a voice memo to a finished record. We write, produce and arrange around your voice — never the other way round.</p>
-          <ul>
-            <li>Full day in-studio with a producer and engineer</li>
-            <li>Top-line and arrangement support if you want it</li>
-            <li>Delivered mixed and master-ready</li>
-          </ul>
-          <a href="contact.html" class="btn btn-outline" style="margin-top:24px;">Book a session</a>
+          <p class="lede" style="font-size:1.05rem;">Professional mix and master from an engineer who has developed artists from first session to release-ready. Your sound, elevated.</p>
+          <a href="contact.html" class="btn btn-outline" style="margin-top:24px;">Enquire</a>
         </div>
       </div>
 
@@ -458,43 +575,85 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
         <div>
           <span class="eyebrow">03</span>
           <h2 style="margin-top:16px;">Music Video</h2>
-          <p class="price-tag" style="display:block; margin-top:14px;">FROM £1,800 / VIDEO</p>
+          <p class="price-tag" style="display:block; margin-top:14px;">FROM £800</p>
         </div>
         <div>
-          <p class="lede" style="font-size:1.05rem;">Treatment, shoot and edit, handled by the same people who understand the record — so the video actually serves the song.</p>
-          <ul>
-            <li>Treatment &amp; concept development</li>
-            <li>Single or multi-location half-day shoot</li>
-            <li>Full edit, colour and delivery in broadcast &amp; social cuts</li>
-          </ul>
-          <a href="contact.html" class="btn btn-outline" style="margin-top:24px;">Book a shoot</a>
+          <p class="lede" style="font-size:1.05rem;">Creative direction and production from concept to final cut — with the same values-led approach we bring to every session.</p>
+          <a href="contact.html" class="btn btn-outline" style="margin-top:24px;">Enquire</a>
         </div>
       </div>
 
       <div class="service-row">
         <div>
           <span class="eyebrow">04</span>
-          <h2 style="margin-top:16px;">Development Consulting</h2>
-          <p class="price-tag" style="display:block; margin-top:14px;">DAY RATE — ENQUIRE</p>
+          <h2 style="margin-top:16px;">Artist Development</h2>
+          <p class="price-tag" style="display:block; margin-top:14px;">POA MONTHLY</p>
         </div>
         <div>
-          <p class="lede" style="font-size:1.05rem;">For managers, labels and charities who want to build something like Silkfutures inside their own organisation — welfare structure included, not bolted on after.</p>
-          <ul>
-            <li>Programme design &amp; welfare framework</li>
-            <li>Media and public-voice training for your artists or team</li>
-            <li>One-off workshops or ongoing advisory</li>
-          </ul>
-          <a href="contact.html" class="btn btn-outline" style="margin-top:24px;">Ask about consulting</a>
+          <p class="lede" style="font-size:1.05rem;">A structured programme for artists who want more than studio time — identity, direction, sound development and strategic guidance.</p>
+          <a href="contact.html" class="btn btn-outline" style="margin-top:24px;">Enquire</a>
+        </div>
+      </div>
+
+      <div class="service-row">
+        <div>
+          <span class="eyebrow">05</span>
+          <h2 style="margin-top:16px;">Full Day Rate</h2>
+          <p class="price-tag" style="display:block; margin-top:14px;">£450 / DAY</p>
+        </div>
+        <div>
+          <p class="lede" style="font-size:1.05rem;">8 hours in the vault. Ideal for intensive recording projects, EPs, and artists who want to lock in and work without the clock.</p>
+          <a href="#booking" class="btn btn-outline" style="margin-top:24px;">Book a full day</a>
+        </div>
+      </div>
+
+      <div class="service-row">
+        <div>
+          <span class="eyebrow">06</span>
+          <h2 style="margin-top:16px;">Silkfutures Sessions</h2>
+          <p class="price-tag" style="display:block; margin-top:14px;">VIA SILKFUTURES.COM</p>
+        </div>
+        <div>
+          <p class="lede" style="font-size:1.05rem;">Mentored studio sessions for young people aged 11–25, delivered through Silkfutures CIC in partnership with Cardiff communities.</p>
+          <a href="futures.html" class="btn btn-outline" style="margin-top:24px;">About Silkfutures</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="cta-bar">
-    <div class="wrap">
-      <h2>TELL US WHAT YOU'RE MAKING.</h2>
-      <div class="cta-actions">
-        <a href="contact.html" class="btn">Start a project</a>
+  <!-- BOOKING -->
+  <section id="booking" class="section-dark">
+    <div class="wrap section-head">
+      <span class="eyebrow">Book the studio</span>
+      <h2>READ IT. TICK IT. <span class="accent">THEN PICK A TIME.</span></h2>
+      <p class="lede dim-d">Every booking starts with the same standard, for every artist. Confirm you've read our No Harmful Music Policy to unlock the calendar below.</p>
+    </div>
+    <div class="wrap" style="display:grid; grid-template-columns:1fr 1.3fr; gap:50px; align-items:start;">
+      <div class="policy-block">
+        <h3>No Harmful Music Policy</h3>
+        <ul class="policy-list">
+          <li>We do not record music that glorifies violence, exploitation, or the degradation of others — regardless of commercial precedent.</li>
+          <li>We believe authenticity is the most powerful artistic force. Music made from a real place always lands deeper.</li>
+          <li>We hold the same standard for every artist, from Silkfutures mentees to Silk Records acts.</li>
+          <li>Booking requests may be declined if the music doesn't align with these values. We'll always tell you honestly if that's the case.</li>
+        </ul>
+
+        <div class="consent-box">
+          <input type="checkbox" id="policy-consent">
+          <label for="policy-consent">I have read and agree to Silkcrayon's No Harmful Music Policy. I understand that my booking request may be declined if my music does not align with the studio's values, and I respect this as part of what makes Silkcrayon what it is.</label>
+        </div>
+      </div>
+
+      <div>
+        <!-- Calendly inline widget — replace data-url with your real Calendly event link.
+             The booking-lock overlay stays up until the policy checkbox above is ticked. -->
+        <div class="booking-widget" id="bookingWidget">
+          <div class="booking-lock">
+            <p>Tick the policy agreement<br>to unlock booking</p>
+          </div>
+          <div class="calendly-inline-widget" data-url="https://calendly.com/silkcrayon-studios/session" style="min-width:280px;height:680px;"></div>
+        </div>
+        <p class="form-note" style="margin-top:16px;">Prefer to talk it through first? <a href="contact.html" style="text-decoration:underline;">Send us a message</a> instead.</p>
       </div>
     </div>
   </section>
@@ -506,7 +665,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     <div class="footer-grid">
       <div>
         <h4>Silkcrayon</h4>
-        <p style="opacity:0.8; max-width:32ch; font-size:0.96rem; margin-bottom:24px;">Production agency and label. Silkfutures develops the artists, Silk Records releases them, and our bespoke studio does the rest.</p>
+        <p style="opacity:0.8; max-width:32ch; font-size:0.96rem; margin-bottom:24px;">Production agency and studio in Cardiff Bay. Silkfutures develops the people, Silk Records releases the artists, and the studio does the rest.</p>
         <div class="newsletter">
           <form class="js-form" onsubmit="return false;">
             <input type="email" placeholder="Your email" aria-label="Email for newsletter" required>
@@ -518,7 +677,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
         <h4>Studio</h4>
         <a href="futures.html">Silkfutures</a>
         <a href="records.html">Silk Records</a>
-        <a href="services.html">Services</a>
+        <a href="services.html">Studio</a>
         <a href="contact.html">Contact</a>
       </div>
       <div>
@@ -529,11 +688,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
       </div>
     </div>
     <div class="footer-bottom">
-      <span>Peckham, London — © <span class="js-year"></span> Silkcrayon</span>
+      <span>Cardiff Bay, Wales — © <span class="js-year"></span> Silkcrayon</span>
       <span>Catalog SKC001–</span>
     </div>
   </div>
 </footer>
+
+<!-- Calendly embed script — required for the inline widget above to render -->
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 
 <script>
 // silkcrayon — shared behaviour
@@ -584,6 +746,15 @@ document.addEventListener('DOMContentLoaded', () => {
       form.reset();
     });
   });
+
+  // booking gate: the Calendly widget stays covered until the policy checkbox is ticked
+  const consentBox = document.getElementById('policy-consent');
+  const bookingWidget = document.getElementById('bookingWidget');
+  if (consentBox && bookingWidget) {
+    consentBox.addEventListener('change', () => {
+      bookingWidget.classList.toggle('unlocked', consentBox.checked);
+    });
+  }
 });
 
 </script>
