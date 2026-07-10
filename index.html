@@ -450,29 +450,21 @@ section{ padding:110px 0; position:relative; }
   .division-visual{ aspect-ratio:16/10; order:-1; }
 }
 
-/* ---------- silk slideshow: fast crossfade, SILK marks scale-corrected to align ---------- */
+/* ---------- silk slideshow: real video background + transparent SILK logo overlay ----------
+   The logo PNG and the video share the exact same native canvas (1920x1080), so stacking
+   them with identical position/size/object-fit rules keeps the mark locked in place —
+   no manual alignment guesswork needed. */
 .slideshow-frame{
-  position:relative; width:100%; max-width:560px; aspect-ratio:1/1;
+  position:relative; width:100%; aspect-ratio:16/9;
   margin:0 auto; overflow:hidden; background:var(--black);
 }
-.slideshow-frame .slide{
-  position:absolute; inset:0; opacity:0; z-index:1;
-  transition:opacity 0.22s linear;
-}
-.slideshow-frame .slide.is-active{ opacity:1; z-index:2; }
-.slideshow-frame .slide img{
+.slideshow-frame video,
+.slideshow-frame .slideshow-logo{
+  position:absolute; inset:0; z-index:1;
   width:100%; height:100%; object-fit:cover; object-position:50% 50%;
-  display:block; transform-origin:center center;
+  display:block;
 }
-/* scale factors measured from each source image so the SILK wordmark renders at the
-   same apparent size and dead-centre in the frame regardless of which slide is showing */
-.slideshow-frame .slide.s1 img{ transform:scale(1.28); }
-.slideshow-frame .slide.s2 img{ transform:scale(1.17); }
-.slideshow-frame .slide.s3 img{ transform:scale(1.0); }
-.slideshow-dots{ display:flex; gap:8px; justify-content:center; margin-top:24px; }
-.slideshow-dots span{ width:6px; height:6px; border-radius:50%; background:var(--line-l); transition:background 0.2s ease; }
-.section-dark .slideshow-dots span{ background:var(--line-d); }
-.slideshow-dots span.is-active{ background:var(--accent); }
+.slideshow-frame .slideshow-logo{ z-index:2; pointer-events:none; }
 
 /* ---------- steps ---------- */
 .steps{ counter-reset:step; }
@@ -652,12 +644,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     </div>
     <div class="wrap">
       <div class="slideshow-frame" id="silkSlideshow">
-        <div class="slide s1 is-active"><img src="assets/slides/slide-1-forest.jpg" alt="Silk Records artist on location, Cardiff"></div>
-        <div class="slide s2"><img src="assets/slides/slide-2-classroom.jpg" alt="Silkfutures workshop session with young people"></div>
-        <div class="slide s3"><img src="assets/slides/slide-3-portrait.jpg" alt="Silk Records artist portrait"></div>
-      </div>
-      <div class="slideshow-dots" id="silkSlideshowDots" aria-hidden="true">
-        <span class="is-active"></span><span></span><span></span>
+        <video autoplay muted loop playsinline preload="auto" poster="assets/silk-slideshow-poster.jpg" aria-hidden="true">
+          <source src="assets/silk-slideshow.mp4" type="video/mp4">
+        </video>
+        <img class="slideshow-logo" src="assets/silk-logo-white.png" alt="SILK">
       </div>
     </div>
   </section>
@@ -997,23 +987,11 @@ document.addEventListener('DOMContentLoaded', () => {
     el.textContent = new Date().getFullYear();
   });
 
-  // SILK slideshow — fast crossfade cycle through the three brand photos
-  const slideshow = document.getElementById('silkSlideshow');
-  const slideshowDots = document.getElementById('silkSlideshowDots');
-  if (slideshow) {
-    const slides = slideshow.querySelectorAll('.slide');
-    const dots = slideshowDots ? slideshowDots.querySelectorAll('span') : [];
-    let slideIdx = 0;
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduceMotion) {
-      setInterval(() => {
-        slides[slideIdx].classList.remove('is-active');
-        if (dots[slideIdx]) dots[slideIdx].classList.remove('is-active');
-        slideIdx = (slideIdx + 1) % slides.length;
-        slides[slideIdx].classList.add('is-active');
-        if (dots[slideIdx]) dots[slideIdx].classList.add('is-active');
-      }, 950);
-    }
+  // SILK slideshow video — respect reduced-motion preference
+  const slideshowVideo = document.querySelector('#silkSlideshow video');
+  if (slideshowVideo && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    slideshowVideo.pause();
+    slideshowVideo.removeAttribute('autoplay');
   }
 
   // contact / apply forms — no backend wired up yet, so confirm locally
