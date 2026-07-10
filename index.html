@@ -90,6 +90,7 @@ p.lede{ font-size:1.2rem; max-width:54ch; }
 }
 .site-nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:72px; }
 .brand{ font-family:var(--display); font-weight:900; font-size:1.25rem; text-transform:uppercase; letter-spacing:-0.01em; }
+.brand.brand-hidden{ opacity:0; pointer-events:none; }
 .brand .dot{ color:var(--red); }
 .nav-links{ display:flex; gap:30px; align-items:center; }
 .nav-links a{
@@ -204,22 +205,20 @@ section{ padding:110px 0; position:relative; }
 .hero-small{ min-height:64vh; }
 
 /* ---------- video hero (home page) ---------- */
-.logo-scroll-wrap{ position:relative; }
-.sticky-logo{
-  position:sticky; top:0; height:0; z-index:20; pointer-events:none;
+.morph-logo{
+  position:fixed; z-index:600; pointer-events:none;
+  top:50%; left:50%; width:min(42vw, 580px);
+  transform:translate(-50%,-50%);
+  transition:top 0.5s cubic-bezier(.4,0,.2,1), left 0.5s cubic-bezier(.4,0,.2,1),
+             width 0.5s cubic-bezier(.4,0,.2,1), transform 0.5s cubic-bezier(.4,0,.2,1);
 }
-.sticky-logo .word-inner{
-  position:absolute; top:26vh; left:0; right:0; text-align:center; padding:0 24px;
+.morph-logo img{ width:100%; height:auto; display:block; }
+.morph-logo.docked{
+  top:24px; left:40px; width:132px; transform:translate(0,0);
 }
-.sticky-logo h1{
-  display:inline-block;
-  font-size:clamp(2.4rem, 9vw, 8rem);
-  letter-spacing:-0.01em; line-height:1;
-  color:var(--white);
-  transition:color 0.35s ease, opacity 0.4s ease;
+@media (prefers-reduced-motion:reduce){
+  .morph-logo{ transition:none; }
 }
-.sticky-logo.on-light h1{ color:var(--black); }
-.sticky-logo.fade-out h1{ opacity:0; }
 .video-hero{
   position:relative; height:100vh; min-height:560px; max-height:1100px;
   overflow:hidden; background:var(--black);
@@ -234,9 +233,8 @@ section{ padding:110px 0; position:relative; }
 }
 .video-hero .scroll-cue{ z-index:3; }
 
-/* handoff runway: empty white space where the pinned word lands, turns black, then fades — clears before real copy arrives */
-.logo-handoff{ position:relative; height:72vh; background:var(--white); }
-.scroll-sentinel{ position:absolute; bottom:0; height:1px; width:1px; }
+/* handoff runway: empty white space where the big logo hovers (black) before docking into the nav */
+.logo-handoff{ position:relative; height:62vh; background:var(--white); }
 
 /* ---------- statement section: big broad "what we do" line, fully static, sits below the handoff ---------- */
 .statement-section{
@@ -250,8 +248,9 @@ section{ padding:110px 0; position:relative; }
   max-width:20ch; margin:0 auto;
 }
 @media (max-width:720px){
-  .sticky-logo .word-inner{ top:20vh; }
-  .logo-handoff{ height:48vh; }
+  .morph-logo{ width:min(70vw,420px); }
+  .morph-logo.docked{ width:104px; top:22px; left:24px; }
+  .logo-handoff{ height:46vh; }
 }
 
 /* ---------- tagline section (home page, scroll-revealed) ---------- */
@@ -536,7 +535,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 <nav class="site-nav">
   <div class="wrap">
-    <a href="index.html" class="brand">SILKCRAYON<span class="dot">.</span></a>
+    <a href="index.html" class="brand brand-hidden">SILKCRAYON<span class="dot">.</span></a>
     <button class="nav-toggle" aria-expanded="false">MENU</button>
     <div class="nav-links">
       <a href="index.html">Home</a>
@@ -550,25 +549,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 <main>
 
-  <!-- VIDEO HERO + PINNED WORDMARK -->
-  <div class="logo-scroll-wrap">
-    <div class="sticky-logo" aria-hidden="true">
-      <div class="word-inner"><h1>SILKCRAYON<span class="accent">.</span></h1></div>
-    </div>
+  <!-- MORPH LOGO: big over hero, black over the handoff zone, docks small into the nav -->
+  <img src="assets/silkcrayon-logo-white.png" alt="Silkcrayon" class="morph-logo" id="morphLogo">
 
-    <section class="video-hero">
-      <video class="video-hero-media" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-        <source src="assets/hero-space.webm" type="video/webm">
-        <source src="assets/hero-space.mp4" type="video/mp4">
-      </video>
-      <div class="video-overlay"></div>
-      <div class="scroll-cue"><span class="bar"></span> Scroll</div>
-    </section>
+  <!-- VIDEO HERO -->
+  <section class="video-hero">
+    <video class="video-hero-media" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+      <source src="assets/hero-space.webm" type="video/webm">
+      <source src="assets/hero-space.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+    <div class="scroll-cue"><span class="bar"></span> Scroll</div>
+  </section>
 
-    <div class="logo-handoff">
-      <div class="scroll-sentinel"></div>
-    </div>
-  </div>
+  <div class="logo-handoff"></div>
 
   <!-- STATEMENT -->
   <section class="statement-section">
@@ -943,26 +937,37 @@ document.addEventListener('DOMContentLoaded', () => {
     heroVideo.removeAttribute('autoplay');
   }
 
-  // pinned wordmark: swap white→black once over the light handoff zone, fade out before real copy arrives
-  const stickyLogo = document.querySelector('.sticky-logo');
-  const logoHandoff = document.querySelector('.logo-handoff');
-  const sentinel = document.querySelector('.scroll-sentinel');
-  if (stickyLogo && logoHandoff && sentinel) {
+  // morph logo: white + big over the video, black + big over the handoff zone, docks small into the nav
+  const morphLogo = document.getElementById('morphLogo');
+  const heroEl = document.querySelector('.video-hero');
+  const handoffEl = document.querySelector('.logo-handoff');
+  if (morphLogo && heroEl && handoffEl) {
+    const WHITE_SRC = 'assets/silkcrayon-logo-white.png';
+    const BLACK_SRC = 'assets/silkcrayon-logo-black.png';
+    let currentSrc = WHITE_SRC;
     let ticking = false;
-    const updateLogoState = () => {
-      const anchorY = window.innerHeight * 0.26;
-      stickyLogo.classList.toggle('on-light', logoHandoff.getBoundingClientRect().top < anchorY);
-      stickyLogo.classList.toggle('fade-out', sentinel.getBoundingClientRect().top < anchorY + 220);
+    const updateMorphLogo = () => {
+      const anchorY = window.innerHeight * 0.5;
+      const pastHero = heroEl.getBoundingClientRect().bottom <= anchorY;
+      const pastHandoff = handoffEl.getBoundingClientRect().bottom <= 260;
+
+      morphLogo.classList.toggle('docked', pastHandoff);
+
+      const wantSrc = pastHandoff ? WHITE_SRC : (pastHero ? BLACK_SRC : WHITE_SRC);
+      if (wantSrc !== currentSrc) {
+        morphLogo.src = wantSrc;
+        currentSrc = wantSrc;
+      }
       ticking = false;
     };
-    updateLogoState();
+    updateMorphLogo();
     window.addEventListener('scroll', () => {
       if (!ticking) {
-        window.requestAnimationFrame(updateLogoState);
+        window.requestAnimationFrame(updateMorphLogo);
         ticking = true;
       }
     }, { passive: true });
-    window.addEventListener('resize', updateLogoState);
+    window.addEventListener('resize', updateMorphLogo);
   }
 
   // contact / apply forms — no backend wired up yet, so confirm locally
