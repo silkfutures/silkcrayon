@@ -204,68 +204,30 @@ section{ padding:110px 0; position:relative; }
 .hero p.lede{ color:rgba(245,244,239,0.78); margin-bottom:40px; }
 .hero-small{ min-height:64vh; }
 
-/* ---------- star hero (home page): centered 8-point star with SILK wordmark ---------- */
+/* ---------- video hero (home page): full-screen video background + SILK logo overlay ---------- */
 .star-hero{
   min-height:100vh;
   display:flex; align-items:center; justify-content:center;
   background:var(--black); color:var(--white);
   padding-top:72px; position:relative; overflow:hidden; text-align:center;
 }
-.star-hero::before{
-  content:"";
-  position:absolute; inset:0; z-index:0; pointer-events:none;
-  opacity:0.06; mix-blend-mode:screen;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+.star-hero-video{
+  position:absolute; inset:0; z-index:0;
+  width:100%; height:100%; object-fit:cover; object-position:center;
 }
-.star-hero-glow{
-  position:absolute; z-index:0; pointer-events:none;
-  left:50%; top:50%; width:min(80vw,1100px); height:min(80vw,1100px);
-  transform:translate(-50%,-50%);
-  background:radial-gradient(circle, rgba(66,110,196,0.3) 0%, rgba(66,110,196,0) 68%);
-}
-.star-hero-field{
-  position:absolute; inset:0; z-index:0; pointer-events:none;
-  background-image:
-    radial-gradient(1.6px 1.6px at 8% 18%, rgba(245,244,239,0.95), transparent),
-    radial-gradient(1.2px 1.2px at 22% 64%, rgba(245,244,239,0.7), transparent),
-    radial-gradient(1.8px 1.8px at 38% 12%, rgba(180,200,245,0.9), transparent),
-    radial-gradient(1.2px 1.2px at 52% 78%, rgba(245,244,239,0.6), transparent),
-    radial-gradient(1.4px 1.4px at 66% 30%, rgba(245,244,239,0.85), transparent),
-    radial-gradient(1.1px 1.1px at 78% 58%, rgba(180,200,245,0.75), transparent),
-    radial-gradient(1.6px 1.6px at 88% 16%, rgba(245,244,239,0.9), transparent),
-    radial-gradient(1.2px 1.2px at 92% 70%, rgba(245,244,239,0.6), transparent),
-    radial-gradient(1.3px 1.3px at 12% 86%, rgba(245,244,239,0.65), transparent),
-    radial-gradient(1.5px 1.5px at 30% 40%, rgba(180,200,245,0.6), transparent),
-    radial-gradient(1.1px 1.1px at 46% 92%, rgba(245,244,239,0.55), transparent),
-    radial-gradient(1.7px 1.7px at 60% 6%, rgba(245,244,239,0.85), transparent),
-    radial-gradient(1.2px 1.2px at 72% 88%, rgba(245,244,239,0.55), transparent),
-    radial-gradient(1.4px 1.4px at 96% 44%, rgba(180,200,245,0.7), transparent);
-  animation:star-twinkle 6s ease-in-out infinite;
-}
-@keyframes star-twinkle{
-  0%,100%{ opacity:0.75; }
-  50%{ opacity:1; }
-}
-@media (prefers-reduced-motion:reduce){
-  .star-hero-field{ animation:none; }
-}
-.star-hero .hero-star.hero-star--center{
-  top:50%; left:50%; width:min(62vw,780px); height:min(62vw,780px); opacity:1;
+.star-hero-overlay{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(180deg, rgba(6,7,12,0.6) 0%, rgba(6,7,12,0.32) 32%, rgba(6,7,12,0.5) 70%, rgba(6,7,12,0.92) 100%);
 }
 .star-hero .wrap{ position:relative; z-index:2; }
 .star-hero-inner{ max-width:720px; margin:0 auto; }
 .star-hero .eyebrow{ justify-content:center; width:fit-content; margin:0 auto 26px; }
-.silk-word{
-  font-family:var(--display); font-weight:900; text-transform:uppercase;
-  letter-spacing:-0.01em; line-height:0.94;
-  font-size:clamp(4.2rem, 15vw, 11.5rem);
-  margin-bottom:28px;
+.hero-logo-mark{
+  width:min(72vw, 620px); height:auto; margin:0 auto 28px; display:block;
+  filter:drop-shadow(0 8px 30px rgba(0,0,0,0.45));
 }
-.star-hero .lede{ margin:0 auto 40px; max-width:52ch; color:rgba(245,244,239,0.8); }
+.star-hero .lede{ margin:0 auto 40px; max-width:52ch; color:rgba(245,244,239,0.85); }
 .star-hero .cta-row{ display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
-@media (max-width:720px){
-  .star-hero .hero-star.hero-star--center{ width:min(88vw,460px); height:min(88vw,460px); }
-}
 
 .scroll-cue{
   position:absolute; bottom:44px; left:40px; z-index:2;
@@ -450,22 +412,6 @@ section{ padding:110px 0; position:relative; }
   .division-visual{ aspect-ratio:16/10; order:-1; }
 }
 
-/* ---------- silk slideshow: real video background + transparent SILK logo overlay ----------
-   The logo PNG and the video share the exact same native canvas (1920x1080), so stacking
-   them with identical position/size/object-fit rules keeps the mark locked in place —
-   no manual alignment guesswork needed. */
-.slideshow-frame{
-  position:relative; width:100%; aspect-ratio:16/9;
-  margin:0 auto; overflow:hidden; background:var(--black);
-}
-.slideshow-frame video,
-.slideshow-frame .slideshow-logo{
-  position:absolute; inset:0; z-index:1;
-  width:100%; height:100%; object-fit:cover; object-position:50% 50%;
-  display:block;
-}
-.slideshow-frame .slideshow-logo{ z-index:2; pointer-events:none; }
-
 /* ---------- steps ---------- */
 .steps{ counter-reset:step; }
 .step{ display:grid; grid-template-columns:90px 1fr; gap:26px; padding:30px 0; border-top:1px solid var(--line-l); }
@@ -586,45 +532,16 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 <main>
 
-  <!-- STAR HERO -->
+  <!-- VIDEO HERO -->
   <section class="star-hero">
-    <div class="star-hero-field" aria-hidden="true"></div>
-    <div class="star-hero-glow" aria-hidden="true"></div>
-    <div class="hero-star hero-star--center" aria-hidden="true">
-      <div class="bloom"></div>
-      <div class="streak"></div>
-      <svg viewBox="0 0 200 200">
-        <defs>
-          <radialGradient id="starCore" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#F5F4EF" stop-opacity="1"/>
-            <stop offset="45%" stop-color="#F5F4EF" stop-opacity="0.85"/>
-            <stop offset="100%" stop-color="#426EC4" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="rayGradA" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#F5F4EF" stop-opacity="0.95"/>
-            <stop offset="18%" stop-color="#F5F4EF" stop-opacity="0.55"/>
-            <stop offset="55%" stop-color="#426EC4" stop-opacity="0.18"/>
-            <stop offset="100%" stop-color="#426EC4" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="rayGradB" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#F5F4EF" stop-opacity="0.9"/>
-            <stop offset="30%" stop-color="#F5F4EF" stop-opacity="0.3"/>
-            <stop offset="100%" stop-color="#F5F4EF" stop-opacity="0"/>
-          </radialGradient>
-        </defs>
-        <g class="ray-primary">
-          <path d="M 100 4 L 105.4 87.1 L 167.9 32.1 L 112.9 94.6 L 196 100 L 112.9 105.4 L 167.9 167.9 L 105.4 112.9 L 100 196 L 94.6 112.9 L 32.1 167.9 L 87.1 105.4 L 4 100 L 87.1 94.6 L 32.1 32.1 L 94.6 87.1 Z" fill="url(#rayGradA)"/>
-        </g>
-        <g class="ray-secondary">
-          <path d="M 126.8 35.3 L 104.2 95.8 L 164.7 73.2 L 106 100 L 164.7 126.8 L 104.2 104.2 L 126.8 164.7 L 100 106 L 73.2 164.7 L 95.8 104.2 L 35.3 126.8 L 94 100 L 35.3 73.2 L 95.8 95.8 L 73.2 35.3 L 100 94 Z" fill="url(#rayGradB)"/>
-        </g>
-        <circle class="star-core" cx="100" cy="100" r="10" fill="url(#starCore)"/>
-      </svg>
-    </div>
+    <video class="star-hero-video" autoplay muted loop playsinline preload="auto" poster="assets/silk-slideshow-poster.jpg" aria-hidden="true" id="heroVideo">
+      <source src="assets/silk-slideshow.mp4" type="video/mp4">
+    </video>
+    <div class="star-hero-overlay" aria-hidden="true"></div>
     <div class="wrap">
       <div class="star-hero-inner">
         <span class="eyebrow">Cardiff Bay — recording studio, label &amp; artist development</span>
-        <h1 class="silk-word">SILK<span class="accent">.</span></h1>
+        <img class="hero-logo-mark" src="assets/silk-logo-white.png" alt="SILK">
         <p class="lede">One studio, one standard, three arms: Silkcrayon Studios records and mixes it, Silk Records releases it, Silkfutures builds the artists behind it.</p>
         <div class="cta-row">
           <a href="services.html#booking" class="btn">Book the studio</a>
@@ -635,23 +552,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     </div>
     <div class="scroll-cue"><span class="bar"></span> Scroll</div>
   </section>
-
-  <!-- SILK SLIDESHOW -->
-  <section class="section-line">
-    <div class="wrap section-head" style="text-align:center;">
-      <span class="eyebrow" style="justify-content:center; width:fit-content; margin:0 auto;">In the room</span>
-      <h2>REAL SESSIONS. <span class="accent">REAL SILK.</span></h2>
-    </div>
-    <div class="wrap">
-      <div class="slideshow-frame" id="silkSlideshow">
-        <video autoplay muted loop playsinline preload="auto" poster="assets/silk-slideshow-poster.jpg" aria-hidden="true">
-          <source src="assets/silk-slideshow.mp4" type="video/mp4">
-        </video>
-        <img class="slideshow-logo" src="assets/silk-logo-white.png" alt="SILK">
-      </div>
-    </div>
-  </section>
-
 
   <!-- DIVISIONS -->
   <section id="divisions" class="section-line">
@@ -987,8 +887,8 @@ document.addEventListener('DOMContentLoaded', () => {
     el.textContent = new Date().getFullYear();
   });
 
-  // SILK slideshow video — respect reduced-motion preference
-  const slideshowVideo = document.querySelector('#silkSlideshow video');
+  // Hero video — respect reduced-motion preference
+  const slideshowVideo = document.getElementById('heroVideo');
   if (slideshowVideo && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     slideshowVideo.pause();
     slideshowVideo.removeAttribute('autoplay');
