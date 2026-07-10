@@ -209,18 +209,30 @@ section{ padding:110px 0; position:relative; }
   position:fixed; z-index:600; pointer-events:none;
   top:50%; left:50%; width:min(42vw, 580px);
   transform:translate(-50%,-50%);
+  text-align:center;
   transition:top 0.5s cubic-bezier(.4,0,.2,1), left 0.5s cubic-bezier(.4,0,.2,1),
              width 0.5s cubic-bezier(.4,0,.2,1), transform 0.5s cubic-bezier(.4,0,.2,1);
 }
-.morph-logo img{ width:100%; height:auto; display:block; }
+.morph-logo h1{
+  display:inline-block; width:100%;
+  font-family:var(--display); font-weight:900; text-transform:uppercase;
+  letter-spacing:-0.01em; line-height:1;
+  font-size:clamp(2.2rem, 7vw, 5.6rem);
+  color:var(--white);
+  transition:color 0.35s ease, font-size 0.5s cubic-bezier(.4,0,.2,1);
+}
 .morph-logo.on-light{
   top:22vh; transform:translate(-50%,0);
 }
+.morph-logo.on-light h1{ color:var(--black); }
 .morph-logo.docked{
-  top:24px; left:40px; width:132px; transform:translate(0,0);
+  top:24px; left:40px; width:220px; transform:translate(0,0); text-align:left;
+}
+.morph-logo.docked h1{
+  font-size:1.15rem; color:var(--white);
 }
 @media (prefers-reduced-motion:reduce){
-  .morph-logo{ transition:none; }
+  .morph-logo, .morph-logo h1{ transition:none; }
 }
 .video-hero{
   position:relative; height:100vh; min-height:560px; max-height:1100px;
@@ -236,7 +248,7 @@ section{ padding:110px 0; position:relative; }
 }
 .video-hero .scroll-cue{ z-index:3; }
 
-/* handoff runway: empty white space where the big logo hovers (black) before docking into the nav */
+/* handoff runway: empty white space where the big wordmark hovers (black) before docking into the nav */
 .logo-handoff{ position:relative; height:62vh; background:var(--white); }
 
 /* ---------- statement section: big broad "what we do" line, fully static, sits below the handoff ---------- */
@@ -253,7 +265,8 @@ section{ padding:110px 0; position:relative; }
 @media (max-width:720px){
   .morph-logo{ width:min(70vw,420px); }
   .morph-logo.on-light{ top:18vh; }
-  .morph-logo.docked{ width:104px; top:22px; left:24px; }
+  .morph-logo.docked{ width:180px; top:22px; left:24px; }
+  .morph-logo.docked h1{ font-size:1rem; }
   .logo-handoff{ height:50vh; }
 }
 
@@ -553,8 +566,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 <main>
 
-  <!-- MORPH LOGO: big over hero, black over the handoff zone, docks small into the nav -->
-  <img src="assets/silkcrayon-logo-white.png" alt="Silkcrayon" class="morph-logo" id="morphLogo">
+  <!-- MORPH WORDMARK: white over hero, black over the handoff zone, docks small into the nav -->
+  <div class="morph-logo" id="morphLogo" aria-hidden="true">
+    <h1>SILKCRAYON<span class="accent">.</span></h1>
+  </div>
 
   <!-- VIDEO HERO -->
   <section class="video-hero">
@@ -941,14 +956,11 @@ document.addEventListener('DOMContentLoaded', () => {
     heroVideo.removeAttribute('autoplay');
   }
 
-  // morph logo: white + big over the video, black + big (higher up) over the handoff zone, docks small into the nav
+  // morph wordmark: white + big over the video, black + big (higher up) over the handoff zone, docks small into the nav
   const morphLogo = document.getElementById('morphLogo');
   const heroEl = document.querySelector('.video-hero');
   const handoffEl = document.querySelector('.logo-handoff');
   if (morphLogo && heroEl && handoffEl) {
-    const WHITE_SRC = 'assets/silkcrayon-logo-white.png';
-    const BLACK_SRC = 'assets/silkcrayon-logo-black.png';
-    let currentSrc = WHITE_SRC;
     let ticking = false;
     const updateMorphLogo = () => {
       const heroAnchorY = window.innerHeight * 0.5;
@@ -958,12 +970,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       morphLogo.classList.toggle('docked', pastHandoff);
       morphLogo.classList.toggle('on-light', pastHero && !pastHandoff);
-
-      const wantSrc = pastHandoff ? WHITE_SRC : (pastHero ? BLACK_SRC : WHITE_SRC);
-      if (wantSrc !== currentSrc) {
-        morphLogo.src = wantSrc;
-        currentSrc = wantSrc;
-      }
       ticking = false;
     };
     updateMorphLogo();
