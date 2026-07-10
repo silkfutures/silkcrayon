@@ -209,9 +209,10 @@ section{ padding:110px 0; position:relative; }
   position:fixed; z-index:600; pointer-events:none;
   top:50%; left:50%; width:min(42vw, 580px);
   transform:translate(-50%,-50%);
-  text-align:center;
-  transition:top 0.5s cubic-bezier(.4,0,.2,1), left 0.5s cubic-bezier(.4,0,.2,1),
-             width 0.5s cubic-bezier(.4,0,.2,1), transform 0.5s cubic-bezier(.4,0,.2,1);
+  text-align:center; opacity:1;
+  transition:top 0.32s cubic-bezier(.4,0,.2,1), left 0.32s cubic-bezier(.4,0,.2,1),
+             width 0.32s cubic-bezier(.4,0,.2,1), transform 0.32s cubic-bezier(.4,0,.2,1),
+             opacity 0.25s ease;
 }
 .morph-logo h1{
   display:inline-block; width:100%;
@@ -219,18 +220,13 @@ section{ padding:110px 0; position:relative; }
   letter-spacing:-0.01em; line-height:1;
   font-size:clamp(2.2rem, 7vw, 5.6rem);
   color:var(--white);
-  transition:color 0.35s ease, font-size 0.5s cubic-bezier(.4,0,.2,1);
+  transition:font-size 0.32s cubic-bezier(.4,0,.2,1);
 }
-.morph-logo.on-light{
-  top:22vh; transform:translate(-50%,0);
-}
-.morph-logo.on-light h1{ color:var(--black); }
 .morph-logo.docked{
   top:24px; left:40px; width:220px; transform:translate(0,0); text-align:left;
 }
-.morph-logo.docked h1{
-  font-size:1.15rem; color:var(--white);
-}
+.morph-logo.docked h1{ font-size:1.15rem; }
+.morph-logo.hidden{ opacity:0; }
 @media (prefers-reduced-motion:reduce){
   .morph-logo, .morph-logo h1{ transition:none; }
 }
@@ -248,13 +244,19 @@ section{ padding:110px 0; position:relative; }
 }
 .video-hero .scroll-cue{ z-index:3; }
 
-/* handoff runway: empty white space where the big wordmark hovers (black) before docking into the nav */
-.logo-handoff{ position:relative; height:62vh; background:var(--white); }
+/* handoff runway: small breathing gap between the video and the statement heading */
+.logo-handoff{ position:relative; height:10vh; background:var(--white); }
 
-/* ---------- statement section: big broad "what we do" line, fully static, sits below the handoff ---------- */
+/* ---------- statement section: a real static wordmark heading sits above the "what we do" line — no pinning, so it can never collide with it ---------- */
 .statement-section{
   position:relative; background:var(--white); color:var(--black);
-  padding:0 0 130px; text-align:center;
+  padding:70px 0 130px; text-align:center;
+}
+.statement-section .statement-wordmark{
+  font-family:var(--display); font-weight:900; text-transform:uppercase;
+  letter-spacing:-0.01em; line-height:1;
+  font-size:clamp(2.2rem, 7vw, 5.6rem);
+  margin-bottom:70px;
 }
 .statement-section .statement{
   font-family:var(--display); font-weight:900; text-transform:uppercase;
@@ -264,10 +266,10 @@ section{ padding:110px 0; position:relative; }
 }
 @media (max-width:720px){
   .morph-logo{ width:min(70vw,420px); }
-  .morph-logo.on-light{ top:18vh; }
   .morph-logo.docked{ width:180px; top:22px; left:24px; }
   .morph-logo.docked h1{ font-size:1rem; }
-  .logo-handoff{ height:50vh; }
+  .logo-handoff{ height:8vh; }
+  .statement-section .statement-wordmark{ margin-bottom:46px; }
 }
 
 /* ---------- tagline section (home page, scroll-revealed) ---------- */
@@ -566,9 +568,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 <main>
 
-  <!-- MORPH WORDMARK: white over hero, black over the handoff zone, docks small into the nav -->
+  <!-- MORPH WORDMARK: white + fixed over the video hero, hidden through the white section (a real static heading takes over there), then docks small into the nav -->
   <div class="morph-logo" id="morphLogo" aria-hidden="true">
-    <h1>SILKCRAYON<span class="accent">.</span></h1>
+    <h1>SILKCRAYON</h1>
   </div>
 
   <!-- VIDEO HERO -->
@@ -586,6 +588,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   <!-- STATEMENT -->
   <section class="statement-section">
     <div class="wrap">
+      <h2 class="statement-wordmark">SILKCRAYON</h2>
       <p class="statement">A production agency &amp; label that develops artists responsibly.</p>
     </div>
   </section>
@@ -956,20 +959,21 @@ document.addEventListener('DOMContentLoaded', () => {
     heroVideo.removeAttribute('autoplay');
   }
 
-  // morph wordmark: white + big over the video, black + big (higher up) over the handoff zone, docks small into the nav
+  // morph wordmark: white + fixed over the video, hidden while the static heading shows instead, docks small into the nav
   const morphLogo = document.getElementById('morphLogo');
   const heroEl = document.querySelector('.video-hero');
-  const handoffEl = document.querySelector('.logo-handoff');
-  if (morphLogo && heroEl && handoffEl) {
+  const statementEl = document.querySelector('.statement-section');
+  if (morphLogo && heroEl && statementEl) {
     let ticking = false;
     const updateMorphLogo = () => {
-      const heroAnchorY = window.innerHeight * 0.5;
-      const landingAnchorY = window.innerHeight * 0.22;
-      const pastHero = heroEl.getBoundingClientRect().bottom <= heroAnchorY;
-      const pastHandoff = handoffEl.getBoundingClientRect().bottom <= landingAnchorY + 260;
+      // once the video has almost fully scrolled past, hand off to the static black heading
+      const pastHero = heroEl.getBoundingClientRect().bottom <= 90;
+      // dock only once the *entire* white section (handoff + statement text) has scrolled past,
+      // with just enough lead for the dock animation to finish right as it goes
+      const pastStatement = statementEl.getBoundingClientRect().bottom <= 140;
 
-      morphLogo.classList.toggle('docked', pastHandoff);
-      morphLogo.classList.toggle('on-light', pastHero && !pastHandoff);
+      morphLogo.classList.toggle('docked', pastHero);
+      morphLogo.classList.toggle('hidden', pastHero && !pastStatement);
       ticking = false;
     };
     updateMorphLogo();
