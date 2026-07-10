@@ -220,14 +220,11 @@ section{ padding:110px 0; position:relative; }
   background:linear-gradient(180deg, rgba(6,7,12,0.6) 0%, rgba(6,7,12,0.32) 32%, rgba(6,7,12,0.5) 70%, rgba(6,7,12,0.92) 100%);
 }
 .star-hero .wrap{ position:relative; z-index:2; }
-.star-hero-inner{ max-width:720px; margin:0 auto; }
-.star-hero .eyebrow{ justify-content:center; width:fit-content; margin:0 auto 26px; }
 .hero-logo-mark{
-  width:min(72vw, 620px); height:auto; margin:0 auto 28px; display:block;
-  filter:drop-shadow(0 8px 30px rgba(0,0,0,0.45));
+  width:min(85vw, 820px); height:auto; margin:0 auto; display:block;
+  filter:drop-shadow(0 10px 40px rgba(0,0,0,0.5));
+  transition:opacity 0.2s linear;
 }
-.star-hero .lede{ margin:0 auto 40px; max-width:52ch; color:rgba(245,244,239,0.85); }
-.star-hero .cta-row{ display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
 
 .scroll-cue{
   position:absolute; bottom:44px; left:40px; z-index:2;
@@ -377,6 +374,24 @@ section{ padding:110px 0; position:relative; }
 .path-card h3{ text-transform:uppercase; font-size:1.2rem; }
 .path-card p{ font-size:0.92rem; color:rgba(245,244,239,0.7); flex:1; }
 .path-card .btn{ align-self:flex-start; }
+
+/* ---------- logo split: hero SILK mark 'divides' into the three arm logos on scroll ---------- */
+.logo-split{
+  display:flex; align-items:center; justify-content:center; flex-wrap:wrap;
+  gap:clamp(28px,6vw,80px); padding:70px 0 20px;
+}
+.logo-split-item{
+  height:clamp(46px,7vw,96px); width:auto; object-fit:contain;
+  opacity:0; transform:translateY(36px) scale(0.82);
+  transition:opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1);
+}
+.logo-split.is-visible .logo-split-item{ opacity:1; transform:translateY(0) scale(1); }
+.logo-split.is-visible .logo-split-item:nth-child(1){ transition-delay:0s; }
+.logo-split.is-visible .logo-split-item:nth-child(2){ transition-delay:0.14s; }
+.logo-split.is-visible .logo-split-item:nth-child(3){ transition-delay:0.28s; }
+@media (prefers-reduced-motion:reduce){
+  .logo-split-item{ transition:none; opacity:1; transform:none; }
+}
 
 /* ---------- division showcase (home page — the whole system) ---------- */
 .division-block{ overflow:hidden; }
@@ -539,26 +554,23 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     </video>
     <div class="star-hero-overlay" aria-hidden="true"></div>
     <div class="wrap">
-      <div class="star-hero-inner">
-        <span class="eyebrow">Cardiff Bay — recording studio, label &amp; artist development</span>
-        <img class="hero-logo-mark" src="assets/silk-logo-white.png" alt="SILK">
-        <p class="lede">One studio, one standard, three arms: Silkcrayon Studios records and mixes it, Silk Records releases it, Silkfutures builds the artists behind it.</p>
-        <div class="cta-row">
-          <a href="services.html#booking" class="btn">Book the studio</a>
-          <a href="#divisions" class="btn btn-outline">See the whole system</a>
-        </div>
-        <p style="font-family:var(--mono); font-size:0.76rem; letter-spacing:0.06em; color:rgba(245,244,239,0.55); margin-top:22px;">Sessions from £80/hour · we reply to every enquiry within two working days.</p>
-      </div>
+      <img class="hero-logo-mark" id="heroLogoMark" src="assets/silk-logo-white.png" alt="SILK">
     </div>
-    <div class="scroll-cue"><span class="bar"></span> Scroll</div>
   </section>
 
   <!-- DIVISIONS -->
   <section id="divisions" class="section-line">
-    <div class="wrap section-head" style="margin-bottom:70px;">
-      <span class="eyebrow">The whole system</span>
+    <div class="wrap">
+      <div class="logo-split" id="logoSplit">
+        <img class="logo-split-item" src="assets/logo-silkcrayon.png" alt="Silkcrayon Studios">
+        <img class="logo-split-item" src="assets/logo-silk-records.png" alt="Silk Records">
+        <img class="logo-split-item" src="assets/logo-silkfutures.png" alt="Silkfutures">
+      </div>
+    </div>
+    <div class="wrap section-head" style="margin-bottom:70px; text-align:center;">
+      <span class="eyebrow" style="justify-content:center; width:fit-content; margin:0 auto;">The whole system</span>
       <h2>ONE STUDIO. <span class="accent">THREE ARMS.</span></h2>
-      <p class="lede">Same building, same engineers, same standard — split into three doors depending on what you need. Silkfutures finds and develops the artists, Silkcrayon Studios records and mixes everyone who walks in, and Silk Records takes the finished work to market.</p>
+      <p class="lede" style="margin:16px auto 0;">Same building, same engineers, same standard — split into three doors depending on what you need. Silkfutures finds and develops the artists, Silkcrayon Studios records and mixes everyone who walks in, and Silk Records takes the finished work to market.</p>
     </div>
   </section>
 
@@ -889,9 +901,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Hero video — respect reduced-motion preference
   const slideshowVideo = document.getElementById('heroVideo');
-  if (slideshowVideo && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (slideshowVideo && reduceMotion) {
     slideshowVideo.pause();
     slideshowVideo.removeAttribute('autoplay');
+  }
+
+  // Hero SILK mark fades out as you scroll past it, so it visually 'dissolves'
+  // just before the three arm logos assemble below — no text moves with it any more.
+  const heroLogoMark = document.getElementById('heroLogoMark');
+  if (heroLogoMark && !reduceMotion) {
+    const updateHeroLogoFade = () => {
+      const vh = window.innerHeight || 800;
+      const fade = Math.max(0, 1 - (window.scrollY / (vh * 0.75)));
+      heroLogoMark.style.opacity = fade;
+    };
+    updateHeroLogoFade();
+    window.addEventListener('scroll', updateHeroLogoFade, { passive: true });
+    window.addEventListener('resize', updateHeroLogoFade);
+  }
+
+  // Logo split — SILK 'divides' into the three arm logos: staggered fade+rise the
+  // moment the section scrolls into view, triggered once via IntersectionObserver.
+  const logoSplit = document.getElementById('logoSplit');
+  if (logoSplit) {
+    if ('IntersectionObserver' in window && !reduceMotion) {
+      const splitObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            logoSplit.classList.add('is-visible');
+            splitObserver.unobserve(logoSplit);
+          }
+        });
+      }, { threshold: 0.35 });
+      splitObserver.observe(logoSplit);
+    } else {
+      logoSplit.classList.add('is-visible');
+    }
   }
 
   // contact / apply forms — no backend wired up yet, so confirm locally
