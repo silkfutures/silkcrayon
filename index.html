@@ -213,6 +213,9 @@ section{ padding:110px 0; position:relative; }
              width 0.5s cubic-bezier(.4,0,.2,1), transform 0.5s cubic-bezier(.4,0,.2,1);
 }
 .morph-logo img{ width:100%; height:auto; display:block; }
+.morph-logo.on-light{
+  top:22vh; transform:translate(-50%,0);
+}
 .morph-logo.docked{
   top:24px; left:40px; width:132px; transform:translate(0,0);
 }
@@ -249,8 +252,9 @@ section{ padding:110px 0; position:relative; }
 }
 @media (max-width:720px){
   .morph-logo{ width:min(70vw,420px); }
+  .morph-logo.on-light{ top:18vh; }
   .morph-logo.docked{ width:104px; top:22px; left:24px; }
-  .logo-handoff{ height:46vh; }
+  .logo-handoff{ height:50vh; }
 }
 
 /* ---------- tagline section (home page, scroll-revealed) ---------- */
@@ -937,7 +941,7 @@ document.addEventListener('DOMContentLoaded', () => {
     heroVideo.removeAttribute('autoplay');
   }
 
-  // morph logo: white + big over the video, black + big over the handoff zone, docks small into the nav
+  // morph logo: white + big over the video, black + big (higher up) over the handoff zone, docks small into the nav
   const morphLogo = document.getElementById('morphLogo');
   const heroEl = document.querySelector('.video-hero');
   const handoffEl = document.querySelector('.logo-handoff');
@@ -947,11 +951,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSrc = WHITE_SRC;
     let ticking = false;
     const updateMorphLogo = () => {
-      const anchorY = window.innerHeight * 0.5;
-      const pastHero = heroEl.getBoundingClientRect().bottom <= anchorY;
-      const pastHandoff = handoffEl.getBoundingClientRect().bottom <= 260;
+      const heroAnchorY = window.innerHeight * 0.5;
+      const landingAnchorY = window.innerHeight * 0.22;
+      const pastHero = heroEl.getBoundingClientRect().bottom <= heroAnchorY;
+      const pastHandoff = handoffEl.getBoundingClientRect().bottom <= landingAnchorY + 260;
 
       morphLogo.classList.toggle('docked', pastHandoff);
+      morphLogo.classList.toggle('on-light', pastHero && !pastHandoff);
 
       const wantSrc = pastHandoff ? WHITE_SRC : (pastHero ? BLACK_SRC : WHITE_SRC);
       if (wantSrc !== currentSrc) {
