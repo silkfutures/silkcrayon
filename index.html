@@ -209,10 +209,9 @@ section{ padding:110px 0; position:relative; }
   position:fixed; z-index:600; pointer-events:none;
   top:50%; left:50%; width:min(42vw, 580px);
   transform:translate(-50%,-50%);
-  text-align:center; opacity:1;
-  transition:top 0.32s cubic-bezier(.4,0,.2,1), left 0.32s cubic-bezier(.4,0,.2,1),
-             width 0.32s cubic-bezier(.4,0,.2,1), transform 0.32s cubic-bezier(.4,0,.2,1),
-             opacity 0.25s ease;
+  text-align:center;
+  transition:top 0.4s cubic-bezier(.4,0,.2,1), left 0.4s cubic-bezier(.4,0,.2,1),
+             width 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
 }
 .morph-logo h1{
   display:inline-block; width:100%;
@@ -220,13 +219,16 @@ section{ padding:110px 0; position:relative; }
   letter-spacing:-0.01em; line-height:1;
   font-size:clamp(2.2rem, 7vw, 5.6rem);
   color:var(--white);
-  transition:font-size 0.32s cubic-bezier(.4,0,.2,1);
+  transition:color 0.3s ease, font-size 0.4s cubic-bezier(.4,0,.2,1);
 }
+.morph-logo.on-light{
+  top:16vh; transform:translate(-50%,0);
+}
+.morph-logo.on-light h1{ color:var(--black); }
 .morph-logo.docked{
   top:24px; left:40px; width:220px; transform:translate(0,0); text-align:left;
 }
-.morph-logo.docked h1{ font-size:1.15rem; }
-.morph-logo.hidden{ opacity:0; }
+.morph-logo.docked h1{ font-size:1.15rem; color:var(--white); }
 @media (prefers-reduced-motion:reduce){
   .morph-logo, .morph-logo h1{ transition:none; }
 }
@@ -244,19 +246,13 @@ section{ padding:110px 0; position:relative; }
 }
 .video-hero .scroll-cue{ z-index:3; }
 
-/* handoff runway: small breathing gap between the video and the statement heading */
-.logo-handoff{ position:relative; height:10vh; background:var(--white); }
+/* handoff runway: room for the pinned black wordmark to sit clear above the statement text */
+.logo-handoff{ position:relative; height:44vh; background:var(--white); }
 
-/* ---------- statement section: a real static wordmark heading sits above the "what we do" line — no pinning, so it can never collide with it ---------- */
+/* ---------- statement section: paragraph sits below the pinned wordmark, with trailing room so it never has to pass through it ---------- */
 .statement-section{
   position:relative; background:var(--white); color:var(--black);
-  padding:70px 0 130px; text-align:center;
-}
-.statement-section .statement-wordmark{
-  font-family:var(--display); font-weight:900; text-transform:uppercase;
-  letter-spacing:-0.01em; line-height:1;
-  font-size:clamp(2.2rem, 7vw, 5.6rem);
-  margin-bottom:70px;
+  padding:0 0 46vh; text-align:center;
 }
 .statement-section .statement{
   font-family:var(--display); font-weight:900; text-transform:uppercase;
@@ -266,10 +262,11 @@ section{ padding:110px 0; position:relative; }
 }
 @media (max-width:720px){
   .morph-logo{ width:min(70vw,420px); }
+  .morph-logo.on-light{ top:13vh; }
   .morph-logo.docked{ width:180px; top:22px; left:24px; }
   .morph-logo.docked h1{ font-size:1rem; }
-  .logo-handoff{ height:8vh; }
-  .statement-section .statement-wordmark{ margin-bottom:46px; }
+  .logo-handoff{ height:60vh; }
+  .statement-section{ padding-bottom:34vh; }
 }
 
 /* ---------- tagline section (home page, scroll-revealed) ---------- */
@@ -588,7 +585,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   <!-- STATEMENT -->
   <section class="statement-section">
     <div class="wrap">
-      <h2 class="statement-wordmark">SILKCRAYON</h2>
       <p class="statement">A production agency &amp; label that develops artists responsibly.</p>
     </div>
   </section>
@@ -959,21 +955,22 @@ document.addEventListener('DOMContentLoaded', () => {
     heroVideo.removeAttribute('autoplay');
   }
 
-  // morph wordmark: white + fixed over the video, hidden while the static heading shows instead, docks small into the nav
+  // morph wordmark: white + centered over the video, animates to black + pinned above the statement text, docks small into the nav
   const morphLogo = document.getElementById('morphLogo');
   const heroEl = document.querySelector('.video-hero');
-  const statementEl = document.querySelector('.statement-section');
-  if (morphLogo && heroEl && statementEl) {
+  const paragraphEl = document.querySelector('.statement-section .statement');
+  if (morphLogo && heroEl && paragraphEl) {
     let ticking = false;
     const updateMorphLogo = () => {
-      // once the video has almost fully scrolled past, hand off to the static black heading
-      const pastHero = heroEl.getBoundingClientRect().bottom <= 90;
-      // dock only once the *entire* white section (handoff + statement text) has scrolled past,
-      // with just enough lead for the dock animation to finish right as it goes
-      const pastStatement = statementEl.getBoundingClientRect().bottom <= 140;
+      // engage black once the video has scrolled up past where the pinned wordmark sits,
+      // so it's never shown black over leftover dark video
+      const pastHero = heroEl.getBoundingClientRect().bottom <= window.innerHeight * 0.16;
+      // dock right as the statement paragraph's own top is about to reach the pinned band —
+      // as late as possible while still guaranteeing zero overlap
+      const pastHandoff = paragraphEl.getBoundingClientRect().top <= window.innerHeight * 0.34;
 
-      morphLogo.classList.toggle('docked', pastHero);
-      morphLogo.classList.toggle('hidden', pastHero && !pastStatement);
+      morphLogo.classList.toggle('docked', pastHandoff);
+      morphLogo.classList.toggle('on-light', pastHero && !pastHandoff);
       ticking = false;
     };
     updateMorphLogo();
